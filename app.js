@@ -4,7 +4,8 @@ var cluster = require('cluster');
 var loggingservice = require('./services/loggingservice.js');
 
 //------------------------------Config
-var config = require('./config.js');
+var config = require('./config');
+var packageJson = require('./package');
 //------------------------------Config
 
 var app = function() {
@@ -23,7 +24,6 @@ app.prototype.appListener = function() {
 
 app.prototype.launchTrader = function() {
 
-  this.logger.log('----------------------------------------------------');
   this.logger.log('Launching trader module.');
   this.logger.log('----------------------------------------------------');
   this.app = require('./apps/trader.js');
@@ -34,7 +34,6 @@ app.prototype.launchTrader = function() {
 
 app.prototype.launchBacktester = function() {
 
-  this.logger.log('----------------------------------------------------');
   this.logger.log('Launching backtester module.');
   this.logger.log('----------------------------------------------------');
   this.app = require('./apps/backtester.js');
@@ -45,7 +44,6 @@ app.prototype.launchBacktester = function() {
 
 app.prototype.launchGa = function() {
 
-  this.logger.log('----------------------------------------------------');
   this.logger.log('Launching ga module.');
   this.logger.log('----------------------------------------------------');
   this.app = require('./apps/ga.js');
@@ -56,7 +54,6 @@ app.prototype.launchGa = function() {
 
 app.prototype.launchReset = function(collection) {
 
-  this.logger.log('----------------------------------------------------');
   this.logger.log('Launching ga module.');
   this.logger.log('----------------------------------------------------');
   this.app = require('./apps/reset.js');
@@ -105,9 +102,9 @@ app.prototype.start = function() {
 
   //------------------------------AnnounceStart
   this.logger.log('----------------------------------------------------');
-  this.logger.log('Starting BitBot v0.9.7');
-  this.logger.log('Real Trading Enabled = ' + config.tradingEnabled);
-  this.logger.log('Working Dir = ' + process.cwd());
+  this.logger.log('Starting BitBot v' + packageJson.version);
+  this.logger.log('Real trading enabled = ' + config.tradingEnabled);
+  this.logger.log('Candle stick size = ' + config.indicatorSettings.candleStickSizeMinutes + ' min');
   this.logger.log('----------------------------------------------------');
   //------------------------------AnnounceStart
 
