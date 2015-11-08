@@ -104,7 +104,7 @@ app.prototype.start = function() {
   this.logger.line();
   this.logger.log('Starting BitBot v' + packageJson.version);
   this.logger.log('Real trading enabled = ' + config.tradingEnabled);
-  this.logger.log('Candle stick size = ' + config.indicatorSettings.candleStickSizeMinutes + ' min');
+  this.logger.logJson(config.indicatorSettings);
   this.logger.line();
   //------------------------------AnnounceStart
 

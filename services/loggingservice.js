@@ -76,4 +76,11 @@ logger.prototype.line = function() {
 
 };
 
+logger.prototype.logJson = function(value) {
+
+  this.logger.log('INFO', '--------------Settings--------------');
+  JSON.stringify(value, null, 2).split(/\n/).forEach(function(line){this.logger.log('INFO', line)}.bind(this));
+
+};
+
 module.exports = logger;

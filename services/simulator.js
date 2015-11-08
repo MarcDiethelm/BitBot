@@ -212,9 +212,6 @@ simulator.prototype.report = function() {
     this.logger.log(transaction);
   }.bind(this));
 
-  this.logger.log('--------------Settings--------------');
-  JSON.stringify(this.indicatorSettings, undefined, 2).split(/\n/).forEach(function(line){this.logger.log(line)}.bind(this));
-
   this.logger.log('---------------Report---------------');
   this.logger.log('Exchange: ' + this.options.exchange);
   this.logger.log('Transaction Fee: ' + this.options.transactionFee + '%');
