@@ -73,6 +73,10 @@ var trader = function() {
 
     this.logger.log('Advice: ' + result.advice + ' (' + result.indicatorValue + ')');
 
+    if(result.advice !== 'hold') {
+      this.logger.line();
+    }
+
     if(result.advice === 'buy') {
 
       agent.order(result.advice);
@@ -162,7 +166,7 @@ trader.prototype.stop = function(cb) {
   retriever.stop();
 
   monitor.resolvePreviousOrder(function() {
-    logger.log('BitBot stopped succesfully!');
+    logger.log('BitBot stopped successfully!');
     cb();
   }.bind(this));
 

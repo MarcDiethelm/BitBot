@@ -52,6 +52,7 @@ reporter.prototype.createReport = function() {
   var report = this.currencyPair.asset + ': ' + this.assetBalance + ' ' + this.currencyPair.currency + ': ' + this.currencyBalance + ' Total in ' + this.currencyPair.currency + ': ' + this.totalCurrencyBalance + ' Profit: ' + this.profitAbsolute + ' (' + this.profitPercentage + '%)';
 
   this.logger.log('Profit Report: ' + report);
+  this.logger.line();
 
   this.emit('report', report);
 

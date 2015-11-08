@@ -25,7 +25,7 @@ app.prototype.appListener = function() {
 app.prototype.launchTrader = function() {
 
   this.logger.log('Launching trader module.');
-  this.logger.log('----------------------------------------------------');
+  this.logger.line();
   this.app = require('./apps/trader.js');
   this.appListener();
   this.app.start();
@@ -35,7 +35,7 @@ app.prototype.launchTrader = function() {
 app.prototype.launchBacktester = function() {
 
   this.logger.log('Launching backtester module.');
-  this.logger.log('----------------------------------------------------');
+  this.logger.line();
   this.app = require('./apps/backtester.js');
   this.appListener();
   this.app.start();
@@ -45,7 +45,7 @@ app.prototype.launchBacktester = function() {
 app.prototype.launchGa = function() {
 
   this.logger.log('Launching ga module.');
-  this.logger.log('----------------------------------------------------');
+  this.logger.line();
   this.app = require('./apps/ga.js');
   this.appListener();
   this.app.start();
@@ -55,7 +55,7 @@ app.prototype.launchGa = function() {
 app.prototype.launchReset = function(collection) {
 
   this.logger.log('Launching ga module.');
-  this.logger.log('----------------------------------------------------');
+  this.logger.line();
   this.app = require('./apps/reset.js');
   this.appListener();
   this.app.start(collection);
@@ -101,11 +101,11 @@ app.prototype.start = function() {
   this.initializeModules(this.appName);
 
   //------------------------------AnnounceStart
-  this.logger.log('----------------------------------------------------');
+  this.logger.line();
   this.logger.log('Starting BitBot v' + packageJson.version);
   this.logger.log('Real trading enabled = ' + config.tradingEnabled);
   this.logger.log('Candle stick size = ' + config.indicatorSettings.candleStickSizeMinutes + ' min');
-  this.logger.log('----------------------------------------------------');
+  this.logger.line();
   //------------------------------AnnounceStart
 
   if(this.run) {

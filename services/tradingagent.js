@@ -152,6 +152,7 @@ agent.prototype.placeSimulatedOrder = function() {
 	if(this.orderDetails.amount <= 0) {
 
 		this.logger.log('Insufficient funds to place an order.');
+        this.logger.line();
 
 	} else {
 
@@ -172,6 +173,7 @@ agent.prototype.processOrder = function(err, order) {
 	if(!order) {
 
 		this.logger.log('Something went wrong when placing the ' + this.orderDetails.orderType + ' order.');
+        this.logger.line();
 
 	} else {
 

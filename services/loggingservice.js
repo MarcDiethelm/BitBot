@@ -70,4 +70,10 @@ logger.prototype.error = function(message) {
 
 };
 
+logger.prototype.line = function() {
+
+ this.logger.log('INFO', this.prefix + '----------------------------------------------------');
+
+};
+
 module.exports = logger;
