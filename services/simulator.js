@@ -28,6 +28,8 @@ var simulator = function(exchangeSettings, backTesterSettings, indicatorSettings
   this.options.totalBalanceInAsset = 0;
   this.options.profit = 0;
   this.options.profitPercentage = 0;
+  this.options.profitAfterFees = 0;
+  this.options.profitPercentageAfterFees = 0;
   this.options.bhProfit = 0;
   this.options.bhProfitPercentage = 0;
   this.options.transactionFee = 0;
@@ -110,7 +112,9 @@ simulator.prototype.postProcess = function() {
   this.options.totalBalanceInCurrency = tools.round(this.options.currencyBalance + (this.options.assetBalance * this.options.lastClose), 8);
   this.options.totalBalanceInAsset = tools.round(this.options.assetBalance + (this.options.currencyBalance / this.options.lastClose), 8);
   this.options.profit = tools.round(this.options.totalBalanceInCurrency - this.options.initialBalanceSumInCurrency, 8);
+  this.options.profitAfterFees = tools.round(this.options.totalBalanceInCurrency - this.options.initialBalanceSumInCurrency - this.options.totalFeeCosts, 8);
   this.options.profitPercentage = tools.round(this.options.profit / this.options.initialBalanceSumInCurrency * 100, 8);
+  this.options.profitPercentageAfterFees = tools.round(this.options.profitAfterFees / this.options.initialBalanceSumInCurrency * 100, 8);
   this.options.totalFeeCostsPercentage = tools.round(this.options.totalFeeCosts / this.options.initialBalanceSumInCurrency * 100, 8);
   this.options.bhProfit = tools.round((this.options.lastCs.close - this.options.firstCs.open) * this.options.initialBalanceSumInAsset, 8);
   this.options.bhProfitPercentage = tools.round(this.options.bhProfit / this.options.initialBalanceSumInCurrency * 100, 8);
@@ -227,6 +231,7 @@ simulator.prototype.report = function() {
   this.logger.log('Biggest winner: ' + this.options.bigWinner + ' Biggest loser: ' + this.options.bigLoser);
   this.logger.log('Average winner: ' + this.options.averageGain + ' Average loser: ' + this.options.averageLoss);
   this.logger.log('Profit: ' + this.options.profit + ' (' + this.options.profitPercentage + '%)');
+  this.logger.log('Profit after fees: ' + this.options.profitAfterFees + ' (' + this.options.profitPercentageAfterFees + '%)');
   this.logger.log('Buy and Hold Profit: ' + this.options.bhProfit + ' (' + this.options.bhProfitPercentage + '%)');
   this.logger.log('Lost on fees: ' + this.options.totalFeeCosts + ' (' + this.options.totalFeeCostsPercentage + '%)');
   this.logger.log('Total traded volue: ' + this.options.totalTradedVolume);
