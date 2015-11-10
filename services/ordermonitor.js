@@ -28,7 +28,7 @@ monitor.prototype.checkFilled = function(checkOrder, filled) {
       clearInterval(checkOrder.interval);
       clearTimeout(checkOrder.timeout);
 
-      this.logger.log('Order (' + checkOrder.id + ') filled succesfully!');
+      this.logger.log('Order (' + checkOrder.id + ') filled successfully!');
 
       this.emit('filled', checkOrder);
 
@@ -52,7 +52,7 @@ monitor.prototype.processCancellation = function(checkOrder, cancelled, retry) {
 
     checkOrder.status = 'filled';
 
-    this.logger.log('Order (' + checkOrder.id + ') filled succesfully!');
+    this.logger.log('Order (' + checkOrder.id + ') filled successfully!');
 
     this.emit('filled', checkOrder);
 
@@ -62,7 +62,7 @@ monitor.prototype.processCancellation = function(checkOrder, cancelled, retry) {
 
 monitor.prototype.processSimulation = function(checkOrder) {
 
-  this.logger.log('Order (' + checkOrder.id + ') filled succesfully!');
+  this.logger.log('Order (' + checkOrder.id + ') filled successfully!');
 
   checkOrder.status = 'filled';
 
