@@ -92,7 +92,7 @@ var trader = function() {
   agent.on('realOrder',function(orderDetails){
 
     if(config.pushOver.enabled) {
-      pusher.send('BitBot - Order Placed!', 'Placed ' + orderDetails.orderType + ' order: (' + orderDetails.amount + '@' + orderDetails.price + ')', 'magic', 1);
+      pusher.send('BitBot - Order Placed!', 'Placed ' + orderDetails.orderType + ' order: (' + orderDetails.amount + ' @ ' + orderDetails.price + ')', 'magic', 1);
     }
 
     monitor.add(orderDetails, config.orderKeepAliveMinutes);
@@ -102,7 +102,7 @@ var trader = function() {
   agent.on('simulatedOrder',function(orderDetails){
 
     if(config.pushOver.enabled) {
-      pusher.send('BitBot - Order Simulated!', 'Simulated ' + orderDetails.orderType + ' order: (' + orderDetails.amount + '@' + orderDetails.price + ')', 'magic', 1);
+      pusher.send('BitBot - Order Simulated!', 'Simulated ' + orderDetails.orderType + ' order: (' + orderDetails.amount + ' @ ' + orderDetails.price + ')', 'magic', 1);
     }
 
     monitor.add(orderDetails, config.orderKeepAliveMinutes);

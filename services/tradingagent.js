@@ -160,7 +160,7 @@ agent.prototype.placeSimulatedOrder = function() {
 
 		this.orderDetails.status = 'filled';
 
-		this.logger.log('Placed simulated ' + this.orderDetails.orderType + ' order: (' + this.orderDetails.amount + '@' + this.orderDetails.price + ')');
+		this.logger.log('Placed simulated ' + this.orderDetails.orderType + ' order: (' + this.orderDetails.amount + ' @ ' + this.orderDetails.price + ')');
 
 		this.emit('simulatedOrder', this.orderDetails);
 
@@ -181,7 +181,7 @@ agent.prototype.processOrder = function(err, order) {
 
 		this.orderDetails.status = order.status;
 
-		this.logger.log('Placed ' + this.orderDetails.orderType + ' order: ' + this.orderDetails.order + ' (' + this.orderDetails.amount + '@' + this.orderDetails.price + ')');
+		this.logger.log('Placed ' + this.orderDetails.orderType + ' order: ' + this.orderDetails.order + ' (' + this.orderDetails.amount + ' @ ' + this.orderDetails.price + ')');
 
 		this.emit('realOrder', this.orderDetails);
 
