@@ -1,6 +1,7 @@
 var _ = require('underscore');
-var tools = require('../util/tools.js');
 var async = require('async');
+var util = require('util');
+var tools = require('../util/tools.js');
 
 var reporter = function(currencyPair, storage, exchangeapi, logger) {
 
@@ -47,15 +48,27 @@ reporter.prototype.initialize = function(err, result) {
 
 };
 
-reporter.prototype.createReport = function() {
+reporter.prototype.createReport = function(order) {
 
-  var report = this.currencyPair.asset + ': ' + this.assetBalance + ' ' + this.currencyPair.currency + ': ' + this.currencyBalance + ' Total in ' + this.currencyPair.currency + ': ' + this.totalCurrencyBalance + ' Profit: ' + this.profitAbsolute + ' (' + this.profitPercentage + '%)';
+  var tradeProfit = tools.round(this.totalCurrencyBalance - order.orderDetails.totalCurrencyBalance, 8);
+  var tradeProfitPercentage = tools.round((tradeProfit / order.orderDetails.totalCurrencyBalance) * 100, 8);
+  var totalProfitSinceStr =  this.initialTotalCurrencyBalanceTimestamp ? tools.formatDate(this.initialTotalCurrencyBalanceTimestamp) :  ' first run';
 
-  this.logger.log('Profit Report: ' + report);
+  var reportTrade = util.format(
+    'Balance: %s: %d, %s: %d | Total in %s: %d | Profit: %d (%d %%)',
+    this.currencyPair.asset, this.assetBalance, this.currencyPair.currency, this.currencyBalance, this.currencyPair.currency, this.totalCurrencyBalance, tradeProfit, tradeProfitPercentage
+  );
+
+  var reportAll = util.format(
+    'Total profit since %s: %s %d (%d %%)',
+    totalProfitSinceStr, this.currencyPair.currency, this.profitAbsolute, this.profitPercentage
+  );
+
+  this.logger.log(reportTrade);
+  this.logger.log(reportAll);
   this.logger.line();
 
-  this.emit('report', report);
-
+  this.emit('report', reportTrade + '\n' +  reportAll);
 };
 
 reporter.prototype.processBalance = function(err, result, includeReport, order) {
@@ -71,7 +84,7 @@ reporter.prototype.processBalance = function(err, result, includeReport, order) 
   this.profitPercentage = tools.round((this.profitAbsolute / this.initalTotalCurrencyBalance) * 100, 8);
 
   if(includeReport) {
-    this.createReport();
+    this.createReport(order);
   }
 
 };
@@ -114,7 +127,7 @@ reporter.prototype.start = function() {
 
 reporter.prototype.updateBalance = function(includeReport, order) {
 
-  if(order.orderDetails.order != 'Simulated') {
+  if(order.orderDetails.order != 'simulated') {
 
     async.series(
         {

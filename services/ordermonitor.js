@@ -1,5 +1,9 @@
 var _ = require('underscore');
 
+//------------------------------Config
+var config = require('../config.js');
+//------------------------------Config
+
 var monitor = function(exchangeapi, logger) {
 
   this.exchangeapi = exchangeapi;
@@ -28,7 +32,13 @@ monitor.prototype.checkFilled = function(checkOrder, filled) {
       clearInterval(checkOrder.interval);
       clearTimeout(checkOrder.timeout);
 
-      this.logger.log('Order (' + checkOrder.id + ') filled successfully!');
+      if (config.debug) {
+        this.logger.log('Order (' + checkOrder.id + ') filled successfully!');
+      }
+      else {
+        this.logger.log('Order filled successfully!');
+      }
+
 
       this.emit('filled', checkOrder);
 
@@ -44,7 +54,12 @@ monitor.prototype.processCancellation = function(checkOrder, cancelled, retry) {
 
     checkOrder.status = 'cancelled';
 
-    this.logger.log('Order (' + checkOrder.id + ') cancelled!');
+    if (config.debug) {
+      this.logger.debug('Order (' + checkOrder.id + ') cancelled!');
+    }
+    else {
+      this.logger.debug('Order cancelled!');
+    }
 
     this.emit('cancelled', checkOrder, retry);
 
@@ -52,7 +67,13 @@ monitor.prototype.processCancellation = function(checkOrder, cancelled, retry) {
 
     checkOrder.status = 'filled';
 
-    this.logger.log('Order (' + checkOrder.id + ') filled successfully!');
+    if (config.debug) {
+      this.logger.log('Order (' + checkOrder.id + ') filled successfully!');
+    }
+    else {
+      this.logger.log('Order filled successfully!');
+    }
+
 
     this.emit('filled', checkOrder);
 
@@ -62,7 +83,13 @@ monitor.prototype.processCancellation = function(checkOrder, cancelled, retry) {
 
 monitor.prototype.processSimulation = function(checkOrder) {
 
-  this.logger.log('Order (' + checkOrder.id + ') filled successfully!');
+  if (config.debug) {
+    this.logger.log('Order (' + checkOrder.id + ') filled successfully!');
+  }
+  else {
+    this.logger.log('Order filled successfully!');
+  }
+
 
   checkOrder.status = 'filled';
 
@@ -76,7 +103,13 @@ monitor.prototype.add = function(orderDetails, cancelTime) {
 
     this.checkOrder = {id: orderDetails.order, orderDetails: orderDetails, status: orderDetails.status};
 
-    this.logger.log('Monitoring order: ' + this.checkOrder.id + ' (Cancellation after ' + cancelTime + ' minutes)');
+    if (config.debug) {
+      this.logger.log('Monitoring order (' + this.checkOrder.id + '): cancelling after ' + cancelTime + ' minutes)');
+    }
+    else {
+      this.logger.log('Monitoring order for ' + cancelTime + ' min');
+    }
+
 
     if(this.checkOrder.status === 'filled') {
 
@@ -100,7 +133,12 @@ monitor.prototype.add = function(orderDetails, cancelTime) {
 
         if(this.checkOrder.status === 'open') {
 
-          this.logger.log('Cancelling order: ' + this.checkOrder.id);
+          if (config.debug) {
+            this.logger.log('Cancelling order (' + this.checkOrder.id + ')');
+          }
+          else {
+            this.logger.log('Cancelling order');
+          }
 
           this.exchangeapi.cancelOrder(this.checkOrder.id, true, function(err, response) {
             this.processCancellation(this.checkOrder, response, true);
@@ -120,7 +158,7 @@ monitor.prototype.add = function(orderDetails, cancelTime) {
 
 monitor.prototype.resolvePreviousOrder = function(cb) {
 
-  if(this.checkOrder.status === 'open' && this.checkOrder.id !== 'Simulated') {
+  if(this.checkOrder.status === 'open' && this.checkOrder.id !== 'simulated') {
 
     clearInterval(this.checkOrder.interval);
     clearTimeout(this.checkOrder.timeout);
@@ -130,7 +168,13 @@ monitor.prototype.resolvePreviousOrder = function(cb) {
     this.exchangeapi.cancelOrder(this.checkOrder.id, true, function(err, response) {
       this.processCancellation(this.checkOrder, response, false);
       this.checkOrder.status = 'resolved';
-      this.logger.log('Previous order (' + this.checkOrder.id + ') resolved!');
+
+      if (config.debug) {
+        this.logger.log('Previous order (' + this.checkOrder.id + ') resolved!');
+      }
+      else {
+        this.logger.log('Previous order resolved!');
+      }
       cb();
     }.bind(this));
 

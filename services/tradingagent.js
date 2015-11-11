@@ -1,3 +1,4 @@
+var util = require('util');
 var _ = require('underscore');
 var tools = require('../util/tools.js');
 var async = require('async');
@@ -18,10 +19,9 @@ var agent = function(tradingEnabled, exchangeSettings, storage, exchangeapi, log
 
 };
 
-//---EventEmitter Setup
-var Util = require('util');
+//---EventEmitter Setup;
 var EventEmitter = require('events').EventEmitter;
-Util.inherits(agent, EventEmitter);
+util.inherits(agent, EventEmitter);
 //---EventEmitter Setup
 
 agent.prototype.order = function(orderType) {
@@ -97,8 +97,17 @@ agent.prototype.calculateOrder = function(result) {
 	var orderBook = result.orderBook;
 
 	var lastClose = result.lastClose;
+	var assetBalanceInCurrency = this.orderDetails.assetAvailable * lastClose;
+  this.orderDetails.totalCurrencyBalance = tools.round(this.orderDetails.currencyAvailable + assetBalanceInCurrency, 8);
 
-	this.logger.log('Preparing to place a ' + this.orderDetails.orderType + ' order! (' + this.currencyPair.asset + ' Balance: ' + this.orderDetails.assetAvailable + ' ' + this.currencyPair.currency + ' Balance: ' + this.orderDetails.currencyAvailable + ' Trading Fee: ' + this.orderDetails.transactionFee +')');
+	this.logger.debug(util.format(
+		'Preparing to place a %s order!',
+		this.orderDetails.orderType));
+
+	this.logger.log(util.format(
+		'Balance: %s %d, %s %d | Total in %s: %d | Trading Fee: %d %%',
+		this.currencyPair.asset, this.orderDetails.assetAvailable, this.currencyPair.currency, this.orderDetails.currencyAvailable, this.currencyPair.currency, this.orderDetails.totalCurrencyBalance, this.orderDetails.transactionFee
+	));
 
 	if(this.orderDetails.orderType === 'buy') {
 
@@ -107,7 +116,7 @@ agent.prototype.calculateOrder = function(result) {
 		var lowestAskWithSlippage = tools.round(lowestAsk * (1 + (this.slippagePercentage / 100)), 8);
 		var balance = (this.orderDetails.currencyAvailable - this.tradingReserveCurrency) * (1 - (this.orderDetails.transactionFee / 100));
 
-		this.logger.log('Lowest Ask: ' + lowestAsk + ' Lowest Ask With Slippage: ' + lowestAskWithSlippage);
+		this.logger.debug('Lowest Ask: ' + lowestAsk + ' Lowest Ask With Slippage: ' + lowestAskWithSlippage);
 
 		this.orderDetails.price = lowestAskWithSlippage;
 		this.orderDetails.amount = tools.floor(balance / this.orderDetails.price, 8);
@@ -120,7 +129,7 @@ agent.prototype.calculateOrder = function(result) {
 
 		var highestBidWithSlippage = tools.round(highestBid * (1 - (this.slippagePercentage / 100)), 8);
 
-		this.logger.log('Highest Bid: ' + highestBid + ' Highest Bid With Slippage: ' + highestBidWithSlippage);
+		this.logger.debug('Highest Bid: ' + highestBid + ' Highest Bid With Slippage: ' + highestBidWithSlippage);
 
 		this.orderDetails.price = highestBidWithSlippage;
 		this.orderDetails.amount = tools.round(this.orderDetails.assetAvailable - this.tradingReserveAsset, 8);
@@ -156,11 +165,11 @@ agent.prototype.placeSimulatedOrder = function() {
 
 	} else {
 
-		this.orderDetails.order = 'Simulated';
+		this.orderDetails.order = 'simulated';
 
 		this.orderDetails.status = 'filled';
 
-		this.logger.log('Placed simulated ' + this.orderDetails.orderType + ' order: (' + this.orderDetails.amount + ' @ ' + this.orderDetails.price + ')');
+		this.logger.log('Placed simulated ' + this.orderDetails.orderType + ' order: ' + this.orderDetails.amount + ' @ ' + this.orderDetails.price);
 
 		this.emit('simulatedOrder', this.orderDetails);
 
@@ -181,7 +190,7 @@ agent.prototype.processOrder = function(err, order) {
 
 		this.orderDetails.status = order.status;
 
-		this.logger.log('Placed ' + this.orderDetails.orderType + ' order: ' + this.orderDetails.order + ' (' + this.orderDetails.amount + ' @ ' + this.orderDetails.price + ')');
+		this.logger.log('Placed ' + this.orderDetails.orderType + ' order: ' + this.orderDetails.order + ' ' + this.orderDetails.amount + ' @ ' + this.orderDetails.price);
 
 		this.emit('realOrder', this.orderDetails);
 
