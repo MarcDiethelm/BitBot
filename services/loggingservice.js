@@ -1,7 +1,7 @@
-var moment = require('moment');
 var _ = require('underscore');
 var winston = require('winston');
 var fs = require('fs');
+var tools = require('../util/tools');
 
 var logger = function(app, debug, prefix) {
 
@@ -26,7 +26,8 @@ var logger = function(app, debug, prefix) {
   };
 
   var now = function() {
-    var format = moment(new Date()).format('DD-MM-YYYY HH:mm:ss');
+    var format = tools.formatDate(tools.now());
+
     return '[' + format + ']';
   };
 

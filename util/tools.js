@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 var tools = function() {
 
 };
@@ -9,6 +11,22 @@ var tools = function() {
  */
 tools.prototype.unixTimeStamp = function unixTimeStamp(timestamp) {
   return Math.floor(timestamp/1000);
+};
+
+/**
+ * Returns the current time as a unix timestamp
+ * @returns {number}
+ */
+tools.prototype.now = function now() {
+  return Math.floor(Date.now() / 1000);
+};
+
+/**
+ * Returns a date string from a unix timestamp
+ * @returns {number}
+ */
+tools.prototype.formatDate = function formatDate(timestamp) {
+  return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
 };
 
 /**
