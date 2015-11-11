@@ -91,7 +91,8 @@ reporter.prototype.start = function() {
 
       if(result) {
 
-        this.initalTotalCurrencyBalance = result;
+        this.initialTotalCurrencyBalance = result.initialBalance;
+        this.initialTotalCurrencyBalanceTimestamp = result.timestamp;
 
       } else {
 

@@ -395,12 +395,18 @@ storage.prototype.dropCollection = function(collection, callback) {
 
 };
 
+/**
+ * Store initial balance at first bitbot run / after a balance reset
+ * @param initialBalance
+ * @param callback
+ */
 storage.prototype.setInitialBalance = function(initialBalance, callback) {
 
 	var csDatastore = mongo(this.mongoConnectionString);
 	var csCollection = csDatastore.collection('balance');
+  var timestamp = tools.now();
 
-	csCollection.update({exchangePair: this.exchangePair}, {exchangePair: this.exchangePair, initialBalance: initialBalance}, { upsert: true }, function(err, doc) {
+	csCollection.update({exchangePair: this.exchangePair}, {exchangePair: this.exchangePair, initialBalance: initialBalance, timestamp: timestamp}, { upsert: true }, function(err, doc) {
 
 		csDatastore.close();
 
@@ -418,6 +424,11 @@ storage.prototype.setInitialBalance = function(initialBalance, callback) {
 
 };
 
+
+/**
+ * Get balance stored at first bitbot run / after last balance reset
+ * @param callback
+ */
 storage.prototype.getInitialBalance = function(callback) {
 
 	var csDatastore = mongo(this.mongoConnectionString);
@@ -433,9 +444,7 @@ storage.prototype.getInitialBalance = function(callback) {
 
 		} else if(doc.length > 0 ){
 
-			var initialBalance = doc[0].initialBalance;
-
-			callback(null, initialBalance);
+			callback(null, doc[0]);
 
 		} else {
 
