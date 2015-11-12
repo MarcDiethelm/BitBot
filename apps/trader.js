@@ -73,10 +73,6 @@ var trader = function() {
 
     this.logger.log('Advice: ' + result.advice + ' (' + result.indicatorValue + ')');
 
-    if(result.advice !== 'hold') {
-      this.logger.line();
-    }
-
     if(result.advice === 'buy') {
 
       agent.order(result.advice);

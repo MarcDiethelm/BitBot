@@ -55,6 +55,8 @@ agent.prototype.order = function(orderType) {
 
 	}.bind(this);
 
+  this.logger.line();
+
 	if(this.tradingEnabled) {
 
 		async.series(
