@@ -163,7 +163,7 @@ agent.prototype.placeSimulatedOrder = function() {
 	if(this.orderDetails.amount <= 0) {
 
 		this.logger.log('Insufficient funds to place an order.');
-        this.logger.line();
+		this.logger.line();
 
 	} else {
 
@@ -171,7 +171,10 @@ agent.prototype.placeSimulatedOrder = function() {
 
 		this.orderDetails.status = 'filled';
 
-		this.logger.log('Placed simulated ' + this.orderDetails.orderType + ' order: ' + this.orderDetails.amount + ' @ ' + this.orderDetails.price);
+		this.logger.log(util.format(
+			'Placed simulated order: %s %d @ %d',
+			this.orderDetails.orderType, this.orderDetails.amount, this.orderDetails.price
+		));
 
 		this.emit('simulatedOrder', this.orderDetails);
 
@@ -184,7 +187,7 @@ agent.prototype.processOrder = function(err, order) {
 	if(!order) {
 
 		this.logger.log('Something went wrong when placing the ' + this.orderDetails.orderType + ' order.');
-        this.logger.line();
+		this.logger.line();
 
 	} else {
 
@@ -192,7 +195,10 @@ agent.prototype.processOrder = function(err, order) {
 
 		this.orderDetails.status = order.status;
 
-		this.logger.log('Placed ' + this.orderDetails.orderType + ' order: ' + this.orderDetails.order + ' ' + this.orderDetails.amount + ' @ ' + this.orderDetails.price);
+		this.logger.log(util.format(
+			'Placed order %s: %s %d @ %d',
+			this.orderDetails.order, this.orderDetails.orderType, this.orderDetails.amount, this.orderDetails.price
+		));
 
 		this.emit('realOrder', this.orderDetails);
 
