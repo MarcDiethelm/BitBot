@@ -52,7 +52,7 @@ reporter.prototype.createReport = function(order) {
 
   var tradeProfit = tools.round(this.totalCurrencyBalance - order.orderDetails.totalCurrencyBalance, 8);
   var tradeProfitPercentage = tools.round((tradeProfit / order.orderDetails.totalCurrencyBalance) * 100, 8);
-  var totalProfitSinceStr =  this.initialTotalCurrencyBalanceTimestamp ? tools.formatDate(this.initialTotalCurrencyBalanceTimestamp) :  ' first run';
+  var totalProfitSinceStr =  this.initialTotalCurrencyBalanceTimestamp ? tools.formatDate(this.initialTotalCurrencyBalanceTimestamp) :  'first run';
 
   var reportTrade = util.format(
     'Balance: %s: %d, %s: %d | Total in %s: %d | Profit: %d (%d %%)',
