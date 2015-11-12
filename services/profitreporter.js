@@ -31,9 +31,9 @@ reporter.prototype.initialize = function(err, result) {
   var highestBid = _.first(result.orderBook.bids).currencyPrice;
   var assetBalanceInCurrency = assetBalance * highestBid;
 
-  this.initalTotalCurrencyBalance = tools.round(currencyBalance + assetBalanceInCurrency, 8);
+  this.initialTotalCurrencyBalance = tools.round(currencyBalance + assetBalanceInCurrency, 8);
 
-  this.storage.setInitialBalance(this.initalTotalCurrencyBalance, function(err) {
+  this.storage.setInitialBalance(this.initialTotalCurrencyBalance, function(err) {
 
     if(err) {
 
@@ -80,8 +80,8 @@ reporter.prototype.processBalance = function(err, result, includeReport, order) 
   var assetBalanceInCurrency = this.assetBalance * highestBid;
 
   this.totalCurrencyBalance = tools.round(this.currencyBalance + assetBalanceInCurrency, 8);
-  this.profitAbsolute = tools.round(this.totalCurrencyBalance - this.initalTotalCurrencyBalance, 8);
-  this.profitPercentage = tools.round((this.profitAbsolute / this.initalTotalCurrencyBalance) * 100, 8);
+  this.profitAbsolute = tools.round(this.totalCurrencyBalance - this.initialTotalCurrencyBalance, 8);
+  this.profitPercentage = tools.round((this.profitAbsolute / this.initialTotalCurrencyBalance) * 100, 8);
 
   if(includeReport) {
     this.createReport(order);
@@ -104,7 +104,7 @@ reporter.prototype.start = function() {
 
       if(result) {
 
-        this.initalTotalCurrencyBalance = result.initialBalance;
+        this.initialTotalCurrencyBalance = result.initialBalance;
         this.initialTotalCurrencyBalanceTimestamp = result.timestamp;
 
       } else {
